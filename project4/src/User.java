@@ -5,9 +5,9 @@ import java.util.*;
 
 public class User {
 
-    String username;
-    String password;
-    SessionCookie cookie;
+    private String username;
+    private String password;
+    private SessionCookie cookie;
 
     public User(String username, String password, SessionCookie cookie) {
         this.username = username;

@@ -98,4 +98,29 @@ public class ChatServer {
 		// TODO: Replace the following code with the actual code
 		return request;
 	}
+
+	public String addUser(String[] input) {
+        // TODO: Replace the following code with the actual code
+		return null;
+	}
+
+	public String userLogin(String[] input) {
+        // TODO: Replace the following code with the actual code
+		return null;
+	}
+
+	public String postMessage(String[] input, String input2) {
+        // TODO: Replace the following code with the actual code
+		return null;
+	}
+
+    public String getMessages(String[] input) {
+        // TODO: Replace the following code with the actual code
+        return null;
+    }
+
+    public String parseRequest(String[] input) {
+        // TODO: Replace the following code with the actual code
+        return null;
+    }
 }

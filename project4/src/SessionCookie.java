@@ -4,9 +4,9 @@
 import java.util.Random;
 
 public class SessionCookie {
-    long id;
+    private long id;
     public static int timeoutLength = 300;
-    long startTime;
+    private long startTime;
 
     public SessionCookie() {
         this(new Random().nextInt(10000));
