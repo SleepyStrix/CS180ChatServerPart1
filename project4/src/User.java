@@ -4,10 +4,10 @@
 import java.util.*;
 
 public class User {
-    String username ="";
-    String password ="";
-    SessionCookie cookie ;
-    Scanner s = new Scanner(System.in);
+
+    String username;
+    String password;
+    SessionCookie cookie;
 
     public User(String username, String password, SessionCookie cookie) {
         this.username = username;
@@ -16,20 +16,20 @@ public class User {
     }
 
     public String getName() {
-        return username;
+        return this.username;
     }
 
     public boolean checkPassword(String password) {
-        if(s.hasNextLine()) {
-            if (s.nextLine() == password) {
-                return true;
-            }
+        if (this.password.equals(password)) {
+            return true;
         }
-        return false;
+        else {
+            return false;
+        }
     }
 
     public SessionCookie getCookie() {
-        return cookie;
+        return this.cookie;
     }
 
     public void setCookie(SessionCookie cookie) {
