@@ -99,27 +99,27 @@ public class ChatServer {
 		return request;
 	}
 
-	public String addUser(String[] input) {
+	public String addUser(String[] args) {
         // TODO: Replace the following code with the actual code
 		return null;
 	}
 
-	public String userLogin(String[] input) {
+	public String userLogin(String[] args) {
         // TODO: Replace the following code with the actual code
 		return null;
 	}
 
-	public String postMessage(String[] input, String input2) {
+	public String postMessage(String[] args, String name) {
         // TODO: Replace the following code with the actual code
 		return null;
 	}
 
-    public String getMessages(String[] input) {
+    public String getMessages(String[] args) {
         // TODO: Replace the following code with the actual code
         return null;
     }
 
-    public String parseRequest(String[] input) {
+    public String parseRequest(String[] args) {
         // TODO: Replace the following code with the actual code
         return null;
     }
