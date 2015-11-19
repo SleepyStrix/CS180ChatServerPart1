@@ -15,8 +15,16 @@ import java.util.*;
  *
  */
 public class ChatServer {
+
+    private User[] users;
+    private int maxMessages;
+    private CircularBuffer cb;
 	
 	public ChatServer(User[] users, int maxMessages) {
+        this.users = new User[100];
+        this.users = users;
+        this.maxMessages = maxMessages;
+        cb = new CircularBuffer(this.maxMessages);
 		// TODO Complete the constructor
 	}
 
@@ -95,13 +103,115 @@ public class ChatServer {
 	 * @return the server response
 	 */
 	public String parseRequest(String request) {
-		// TODO: Replace the following code with the actual code
-		return request;
+        request = replaceEscapeChars(request);
+        int endIndex = request.indexOf("\r\n");
+        if (endIndex == -1) {
+            return MessageFactory.makeErrorMessage(MessageFactory.FORMAT_COMMAND_ERROR);
+        }
+        request = request.substring(0, endIndex);
+        String[] parsed = request.split("\t");
+        /*if (parsed.length < 3) {
+            return MessageFactory.makeErrorMessage(MessageFactory.FORMAT_COMMAND_ERROR);
+        }*/
+
+        switch (parsed[0]) {
+            case ("ADD-USER") : {
+                //check if valid number of arguments
+                if (parsed.length != 4) {
+                    return MessageFactory.makeErrorMessage(MessageFactory.FORMAT_COMMAND_ERROR);
+                }
+                //find user
+                User u = findUserByCookie(parsed[1]);
+                if (u == null) {
+                    return MessageFactory.makeErrorMessage(MessageFactory.USERNAME_LOOKUP_ERROR);
+                }
+                //check if cookie null
+                if (u.getCookie() == null) {
+                    return MessageFactory.makeErrorMessage(MessageFactory.UNKNOWN_ERROR);
+                }
+                //check for cookie timeout
+                if (u.getCookie().hasTimedOut()) {
+                    u.setCookie(null);
+                    return MessageFactory.makeErrorMessage(MessageFactory.COOKIE_TIMEOUT_ERROR);
+                }
+                return addUser(parsed);
+            }
+            case ("USER-LOGIN") : {
+                if (parsed.length != 3) {
+                    return MessageFactory.makeErrorMessage(MessageFactory.FORMAT_COMMAND_ERROR);
+                }
+                return userLogin(parsed);
+            }
+            case ("POST-MESSAGE") : {
+                if (parsed.length != 3) {
+                    return MessageFactory.makeErrorMessage(MessageFactory.FORMAT_COMMAND_ERROR);
+                }
+                //find user
+                User u = findUserByCookie(parsed[1]);
+                if (u == null) {
+                    return MessageFactory.makeErrorMessage(MessageFactory.USERNAME_LOOKUP_ERROR);
+                }
+                //check if cookie null
+                if (u.getCookie() == null) {
+                    return MessageFactory.makeErrorMessage(MessageFactory.UNKNOWN_ERROR);
+                }
+                //check for cookie timeout
+                if (u.getCookie().hasTimedOut()) {
+                    u.setCookie(null);
+                    return MessageFactory.makeErrorMessage(MessageFactory.COOKIE_TIMEOUT_ERROR);
+                }
+                return postMessage(parsed, parsed[0]);
+            }
+
+            case ("GET-MESSAGES") : {
+                if (parsed.length != 3) {
+                    return MessageFactory.makeErrorMessage(MessageFactory.FORMAT_COMMAND_ERROR);
+                }
+                //find user
+                User u = findUserByCookie(parsed[1]);
+                if (u == null) {
+                    return MessageFactory.makeErrorMessage(MessageFactory.USERNAME_LOOKUP_ERROR);
+                }
+                //check if cookie null
+                if (u.getCookie() == null) {
+                    return MessageFactory.makeErrorMessage(MessageFactory.UNKNOWN_ERROR);
+                }
+                //check for cookie timeout
+                if (u.getCookie().hasTimedOut()) {
+                    u.setCookie(null);
+                    return MessageFactory.makeErrorMessage(MessageFactory.COOKIE_TIMEOUT_ERROR);
+                }
+                return getMessages(parsed);
+            }
+
+            default : {
+                return MessageFactory.makeErrorMessage(MessageFactory.UNKNOWN_COMMAND_ERROR);
+            }
+        }
 	}
 
 	public String addUser(String[] args) {
-        // TODO: Replace the following code with the actual code
-		return null;
+        long cookieID = Long.parseLong(args[1]);
+        String username = args[2];
+        String password = args[3];
+        if (!username.matches("[A-Za-z0-9]")) {
+            return MessageFactory.makeErrorMessage(MessageFactory.INVALID_VALUE_ERROR, "Invalid username format: " +
+                    username);
+        }
+        if (!password.matches("[A-Za-z0-9]")) {
+            return MessageFactory.makeErrorMessage(MessageFactory.INVALID_VALUE_ERROR, "Invalid password format: " +
+                    password);
+        }
+        if (username.length() < 1 || username.length() > 20){
+            return MessageFactory.makeErrorMessage(MessageFactory.INVALID_VALUE_ERROR, "Invalid username length: " +
+                    username);
+        }
+        if (password.length() < 4 || password.length() > 40){
+            return MessageFactory.makeErrorMessage(MessageFactory.INVALID_VALUE_ERROR, "Invalid password length: " +
+                    password);
+        }
+        users[users.length] = new User(username, password, new SessionCookie());
+		return "SUCCESS\r\n";
 	}
 
 	public String userLogin(String[] args) {
@@ -119,8 +229,29 @@ public class ChatServer {
         return null;
     }
 
-    public String parseRequest(String[] args) {
-        // TODO: Replace the following code with the actual code
+    /**
+     * Finds user in users array by name
+     * @param name name of user to search for
+     * @return user, else null
+     */
+    User findUser(String name) {
+        for (User u : users) {
+            if (u.getName().equals(name)){
+                return u;
+            }
+        }
         return null;
     }
+
+   User findUserByCookie(String idString) {
+       int id = Integer.parseInt(idString);
+        for (User u : users) {
+            if (u.getCookie().getID() == id) {
+                return u;
+            }
+        }
+        return null;
+    }
+
+
 }
