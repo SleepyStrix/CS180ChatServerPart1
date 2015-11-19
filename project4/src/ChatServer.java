@@ -19,10 +19,12 @@ public class ChatServer {
     private User[] users;
     private int maxMessages;
     private CircularBuffer cb;
+    private int userCount = 0;
 	
 	public ChatServer(User[] users, int maxMessages) {
-        this.users = new User[100];
         this.users = users;
+        this.userCount = users.length;
+        this.users = Arrays.copyOf(this.users, 100);
         this.maxMessages = maxMessages;
         cb = new CircularBuffer(this.maxMessages);
 		// TODO Complete the constructor
@@ -194,11 +196,11 @@ public class ChatServer {
         long cookieID = Long.parseLong(args[1]);
         String username = args[2];
         String password = args[3];
-        if (!username.matches("[A-Za-z0-9]")) {
+        if (!stringIsAlphanumeric(username)) {
             return MessageFactory.makeErrorMessage(MessageFactory.INVALID_VALUE_ERROR, "Invalid username format: " +
                     username);
         }
-        if (!password.matches("[A-Za-z0-9]")) {
+        if (!stringIsAlphanumeric(password)) {
             return MessageFactory.makeErrorMessage(MessageFactory.INVALID_VALUE_ERROR, "Invalid password format: " +
                     password);
         }
@@ -210,7 +212,8 @@ public class ChatServer {
             return MessageFactory.makeErrorMessage(MessageFactory.INVALID_VALUE_ERROR, "Invalid password length: " +
                     password);
         }
-        users[users.length] = new User(username, password, new SessionCookie());
+        users[userCount] = new User(username, password, new SessionCookie());
+        userCount++;
 		return "SUCCESS\r\n";
 	}
 
@@ -243,7 +246,7 @@ public class ChatServer {
         return null;
     }
 
-   User findUserByCookie(String idString) {
+    User findUserByCookie(String idString) {
        int id = Integer.parseInt(idString);
         for (User u : users) {
             if (u.getCookie().getID() == id) {
@@ -251,6 +254,16 @@ public class ChatServer {
             }
         }
         return null;
+    }
+
+    boolean stringIsAlphanumeric(String s) {
+        char[] chars = s.toCharArray();
+        for (char c : chars) {
+            if (!Character.isLetterOrDigit(c)) {
+                return false;
+            }
+        }
+        return true;
     }
 
 
