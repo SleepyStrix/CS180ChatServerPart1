@@ -231,7 +231,32 @@ public class ChatServer {
 	}
 
 	public String userLogin(String[] args) {
-        // TODO: Replace the following code with the actual code
+        // TODO: Replace the following code with the actual code.
+        // TODO: Replace the following code with the actual code.
+        // TODO: Replace the following code with the actual code.
+        // TODO: Replace the following code with the actual code.
+        // TODO: Replace the following code with the actual code.
+        // TODO: Replace the following code with the actual code.
+        // TODO: Replace the following code with the actual code.
+        // TODO: Replace the following code with the actual code.
+        // TODO: Replace the following code with the actual code.
+        // TODO: Replace the following code with the actual code.
+        // TODO: Replace the following code with the actual code.
+        // TODO: Replace the following code with the actual code.
+        // TODO: Replace the following code with the actual code.
+        // TODO: Replace the following code with the actual code.
+        // TODO: Also add default root user. All test cases must pass.
+        // TODO: Also add default root user. All test cases must pass.
+        // TODO: Also add default root user. All test cases must pass.
+        // TODO: Also add default root user. All test cases must pass.
+        // TODO: Also add default root user. All test cases must pass.
+        // TODO: Also add default root user. All test cases must pass.
+        // TODO: Also add default root user. All test cases must pass.
+        // TODO: Also add default root user. All test cases must pass.
+        // TODO: Also add default root user. All test cases must pass.
+        // TODO: Also add default root user. All test cases must pass.
+        // TODO: Also add default root user. All test cases must pass.
+        // TODO: Also add default root user. All test cases must pass.
 		return null;
 	}
 
