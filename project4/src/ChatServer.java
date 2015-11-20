@@ -20,6 +20,7 @@ public class ChatServer {
     private int maxMessages;
     private CircularBuffer cb;
     private int userCount = 0;
+    private SessionCookie[] cookies = new SessionCookie[100];
 	
 	public ChatServer(User[] users, int maxMessages) {
         this.users = users;
@@ -122,6 +123,10 @@ public class ChatServer {
                 if (parsed.length != 4) {
                     return MessageFactory.makeErrorMessage(MessageFactory.FORMAT_COMMAND_ERROR);
                 }
+                //check if cookie exists for any user
+                if (!isValidCookie(parsed[1])) {
+                    return MessageFactory.makeErrorMessage(MessageFactory.LOGIN_ERROR);
+                }
                 //find user
                 User u = findUserByCookie(parsed[1]);
                 if (u == null) {
@@ -153,6 +158,10 @@ public class ChatServer {
                 if (u == null) {
                     return MessageFactory.makeErrorMessage(MessageFactory.USERNAME_LOOKUP_ERROR);
                 }
+                //check if cookie exists for any user
+                if (!isValidCookie(parsed[1])) {
+                    return MessageFactory.makeErrorMessage(MessageFactory.LOGIN_ERROR);
+                }
                 //check if cookie null
                 if (u.getCookie() == null) {
                     return MessageFactory.makeErrorMessage(MessageFactory.UNKNOWN_ERROR);
@@ -169,6 +178,10 @@ public class ChatServer {
                 if (parsed.length != 3) {
                     return MessageFactory.makeErrorMessage(MessageFactory.FORMAT_COMMAND_ERROR);
                 }
+                //check if cookie exists for any user
+                if (!isValidCookie(parsed[1])) {
+                    return MessageFactory.makeErrorMessage(MessageFactory.LOGIN_ERROR);
+                }
                 //find user
                 User u = findUserByCookie(parsed[1]);
                 if (u == null) {
@@ -176,7 +189,7 @@ public class ChatServer {
                 }
                 //check if cookie null
                 if (u.getCookie() == null) {
-                    return MessageFactory.makeErrorMessage(MessageFactory.UNKNOWN_ERROR);
+                    return MessageFactory.makeErrorMessage(MessageFactory.LOGIN_ERROR);
                 }
                 //check for cookie timeout
                 if (u.getCookie().hasTimedOut()) {
@@ -223,13 +236,46 @@ public class ChatServer {
 	}
 
 	public String postMessage(String[] args, String name) {
-        // TODO: Replace the following code with the actual code
-		return null;
+        String idString = args[1];
+        String message = args[2];
+        String username = findUserByCookie(idString).getName();
+        //cull spaces from beginning of message
+        while (message.substring(0,1).equals(" ")) {
+            message = message.substring(1);
+            if (message.length() == 0) {
+                return MessageFactory.makeErrorMessage(MessageFactory.INVALID_VALUE_ERROR);
+            }
+        }
+        //cull spaces from end of message
+        while (message.substring(message.length() - 1, message.length()).equals(" ")) {
+            message = message.substring(0,message.length() - 1);
+            if (message.length() == 0) {
+                return MessageFactory.makeErrorMessage(MessageFactory.INVALID_VALUE_ERROR);
+            }
+        }
+        String newMessage = username + ": " + message;
+        cb.put(newMessage);
+        return "SUCCESS\r\n";
 	}
 
     public String getMessages(String[] args) {
-        // TODO: Replace the following code with the actual code
-        return null;
+        String idString = args[1];
+        String numMessagesString = args[2];
+        String username = findUserByCookie(idString).getName();
+        int numMessages = Integer.parseInt(numMessagesString);
+        if (numMessages < 1) {
+            return MessageFactory.makeErrorMessage(MessageFactory.INVALID_VALUE_ERROR);
+        }
+        String[] pulled = cb.getNewest(numMessages);
+        if (pulled.length == 0) {
+            return "SUCCESS\r\n";
+        }
+        String result = "SUCCESS";
+        for(String s : pulled) {
+            result = result + "\t" + s;
+        }
+        result = result + "\r\n";
+        return result;
     }
 
     /**
@@ -247,10 +293,12 @@ public class ChatServer {
     }
 
     User findUserByCookie(String idString) {
-       int id = Integer.parseInt(idString);
+       long id = Long.parseLong(idString);
         for (User u : users) {
-            if (u.getCookie().getID() == id) {
-                return u;
+            if (u != null && u.getCookie() != null) {
+                if (u.getCookie().getID() == id) {
+                    return u;
+                }
             }
         }
         return null;
@@ -264,6 +312,18 @@ public class ChatServer {
             }
         }
         return true;
+    }
+
+    boolean isValidCookie(String idString) {
+        long id = Long.parseLong(idString);
+        for (User u : users) {
+            if (u != null && u.getCookie() != null) {
+                if (u.getCookie().getID() == id) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 

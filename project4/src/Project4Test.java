@@ -148,7 +148,7 @@ public class Project4Test {
         users[0] = new User("greg", "greg", new SessionCookie(42));
         ChatServer chatServer = new ChatServer(users, 100);
 
-        String student = chatServer.userLogin(new String[] { "USER-LOGIN", "root", "cs180" });
+        String student = chatServer.userLogin(new String[]{"USER-LOGIN", "root", "cs180"});
         assertTrue("ChatServer: can not log as root user", student.matches("SUCCESS\t\\d+\r\n"));
     }
 
@@ -176,7 +176,7 @@ public class Project4Test {
         ChatServer chatServer = new ChatServer(users, 100);
 
         String ta = "SUCCESS\r\n";
-        String student = chatServer.postMessage(new String[] { "POST-MESSAGE", "42", "Hello, world!!" },  "varun");
+        String student = chatServer.postMessage(new String[]{"POST-MESSAGE", "42", "Hello, world!!"}, "varun");
 
         assertEquals("ChatServer: 'postMessage' failed when it shouldn't have.",
                 ta, student);
@@ -192,6 +192,22 @@ public class Project4Test {
         String msg = verifyErrorMessage(student, MessageFactory.INVALID_VALUE_ERROR);
         assertTrue("postMessage:" + msg, "".equals(msg));
     }
+    /***************
+     * Custom tests
+     *******/
+
+    @Test(timeout=1000)
+    public void testPostMessageSpaces() {
+        User[] users = new User[1];
+        users[0] = new User("greg", "greg", new SessionCookie(42));
+        ChatServer chatServer = new ChatServer(users, 100);
+
+        String ta = "SUCCESS\r\n";
+        String student = chatServer.postMessage(new String[]{"POST-MESSAGE", "42", "   "}, "varun");
+        String msg = verifyErrorMessage(student, MessageFactory.INVALID_VALUE_ERROR);
+        assertTrue("postMessage:" + msg, "".equals(msg));
+    }
+
 
     /********************************************************************************************************
      *
@@ -217,6 +233,7 @@ public class Project4Test {
         assertTrue("ChatServer: 'getMessage' incorrect response format", student.endsWith("\r\n"));
 
         String[] tab = student.trim().split("\t");
+        System.out.println(student);
         assertEquals("ChatServer: 'getMessage' invalid return value (1 msg sent, 1 requested)", 2,
                 tab.length);
         assertTrue("ChatServer: 'getMessage' invalid return value (1 msg sent, 1 requested)",

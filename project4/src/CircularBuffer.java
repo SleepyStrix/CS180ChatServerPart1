@@ -36,15 +36,18 @@ public class CircularBuffer {
             return new String[0];
         }
         int minNum = Math.min(numAvailable, numMessages);
-        if (minNum == 0) {
+        if (minNum <= 0) {
             return new String[0];
         }
         String[] result = new String[minNum];
-        int count = 0;
-        for (int i = lastPointer(pointer); i <= minNum;) {
+        int count = minNum - 1;
+        for (int i = lastPointer(pointer); count >= 0;) {
+            System.out.println("Count: "+ count + " i: " + i);
+            System.out.println("num available:" + numAvailable);
             result[count] = buffer[i];
+            System.out.println(result[count]);
             i = lastPointer(i);
-            count++;
+            count--;
         }
         return result;
     }
@@ -75,7 +78,7 @@ public class CircularBuffer {
 
     private int lastPointer(int from) {
         int next = from - 1;
-        if (next == 0) {
+        if (next < 0) {
             next = buffer.length - 1;
         }
         return next;

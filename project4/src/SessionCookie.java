@@ -18,7 +18,7 @@ public class SessionCookie {
     }
 
     public boolean hasTimedOut() {
-        if (startTime - System.currentTimeMillis() < (timeoutLength * 1000)) {
+        if (System.currentTimeMillis() - startTime <= (timeoutLength * 1000)) {
             return false;
         }
         else {
