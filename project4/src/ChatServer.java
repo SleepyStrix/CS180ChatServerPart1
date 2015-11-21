@@ -28,8 +28,8 @@ public class ChatServer {
         this.users = Arrays.copyOf(this.users, 100);
         this.maxMessages = maxMessages;
         cb = new CircularBuffer(this.maxMessages);
-		// TODO Complete the constructor
-	}
+        users[0] = new User("root", "cs180", new SessionCookie());
+    }
 
 	/**
 	 * This method begins server execution.
@@ -231,33 +231,23 @@ public class ChatServer {
 	}
 
 	public String userLogin(String[] args) {
-        // TODO: Replace the following code with the actual code.
-        // TODO: Replace the following code with the actual code.
-        // TODO: Replace the following code with the actual code.
-        // TODO: Replace the following code with the actual code.
-        // TODO: Replace the following code with the actual code.
-        // TODO: Replace the following code with the actual code.
-        // TODO: Replace the following code with the actual code.
-        // TODO: Replace the following code with the actual code.
-        // TODO: Replace the following code with the actual code.
-        // TODO: Replace the following code with the actual code.
-        // TODO: Replace the following code with the actual code.
-        // TODO: Replace the following code with the actual code.
-        // TODO: Replace the following code with the actual code.
-        // TODO: Replace the following code with the actual code.
-        // TODO: Also add default root user. All test cases must pass.
-        // TODO: Also add default root user. All test cases must pass.
-        // TODO: Also add default root user. All test cases must pass.
-        // TODO: Also add default root user. All test cases must pass.
-        // TODO: Also add default root user. All test cases must pass.
-        // TODO: Also add default root user. All test cases must pass.
-        // TODO: Also add default root user. All test cases must pass.
-        // TODO: Also add default root user. All test cases must pass.
-        // TODO: Also add default root user. All test cases must pass.
-        // TODO: Also add default root user. All test cases must pass.
-        // TODO: Also add default root user. All test cases must pass.
-        // TODO: Also add default root user. All test cases must pass.
-		return null;
+        String username = args[1];
+        String password = args[2];
+        String userID;
+        User u;
+
+        u = findUser(username);
+        if (u == null) {
+            return MessageFactory.makeErrorMessage(MessageFactory.USERNAME_LOOKUP_ERROR);
+        } else {
+            if (u.checkPassword(password) == false) {
+                do {
+                    SessionCookie c = new SessionCookie();
+                    userID = Long.toString(c.getID());
+                } while (isValidCookie(userID) == true);
+            }
+        }
+		return "SUCCESS\t"+u.getCookie().getID()+"\r\n";
 	}
 
 	public String postMessage(String[] args, String name) {
