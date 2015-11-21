@@ -7,11 +7,11 @@ import java.util.*;
  * This is the skeleton code for the ChatServer Class. This is a private chat
  * server for you and your friends to communicate.
  * 
- * @author (Your Name) <(YourEmail@purdue.edu)>
+ * @author Daniel Hewlett dhewlett@purdue.edu
+ *
+ * @lab LC2
  * 
- * @lab (Your Lab Section)
- * 
- * @version (Today's Date)
+ * @version 11/20/15
  *
  */
 public class ChatServer {
