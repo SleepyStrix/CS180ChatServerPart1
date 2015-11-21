@@ -1,5 +1,13 @@
 /**
- * Created by Yonggun on 11/17/2015.
+ * Session Cookie
+ *
+ * Stores session id and time for a user
+ *
+ * @author Daniel Hewlett dhewlett@purdue.edu, Yonggun Yoon yoon126@purdue.edu
+ *
+ * @lab LC2, 807
+ *
+ * @version 11/20/15
  */
 import java.util.*;
 

@@ -91,6 +91,7 @@ public class Project4Test {
 
     @Test(timeout=1000)
     public void testAddUserNominal() {
+        //issue with this test case?
         User[] users = new User[1];
         users[0] = new User("greg", "greg", new SessionCookie(42));
         ChatServer chatServer = new ChatServer(users, 100);

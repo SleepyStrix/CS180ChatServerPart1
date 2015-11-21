@@ -1,7 +1,15 @@
 import java.text.DecimalFormat;
 
 /**
- * Created by Dan on 11/15/2015.
+ * Circular Buffer
+ *
+ * Handles message storage
+ *
+ * @author Daniel Hewlett dhewlett@purdue.edu, Yonggun Yoon yoon126@purdue.edu
+ *
+ * @lab LC2, 807
+ *
+ * @version 11/20/15
  */
 public class CircularBuffer {
 
@@ -42,7 +50,7 @@ public class CircularBuffer {
         String[] result = new String[minNum];
         int count = minNum - 1;
         for (int i = lastPointer(pointer); count >= 0;) {
-            System.out.println("Count: "+ count + " i: " + i);
+            System.out.println("Count: " + count + " i: " + i);
             System.out.println("num available:" + numAvailable);
             result[count] = buffer[i];
             System.out.println(result[count]);
